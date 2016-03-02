@@ -14,6 +14,7 @@ RUN gem install fpm
 RUN cd /usr/bin && mkdir -p /tmp/scalyr && \
   git config --global user.name "Scalyr" && git config --global user.email support@scalyr.com && \
   git clone git://github.com/ReturnPath/scalyr-agent-2.git /tmp/scalyr && \
+  git checkout master && \
   cd /tmp/scalyr && \ 
   python build_package.py deb && \
   dpkg -i scalyr-agent-2_2.0.16_all.deb && \
