@@ -454,6 +454,8 @@ class DockerMonitor( ScalyrMonitor ):
 
         running_containers = self.__get_running_containers( self.__socket_file )
 
+        self._logger.info( "Found '%d' running containers" % len(running_containers) )
+
         #get the containers that have started since the last sample
         starting = {}
         for cid, name in running_containers.iteritems():
