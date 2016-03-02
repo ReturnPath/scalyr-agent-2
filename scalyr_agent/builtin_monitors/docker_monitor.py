@@ -316,6 +316,8 @@ class DockerMonitor( ScalyrMonitor ):
         """
         request = DockerRequest( socket_file ).get( "/containers/json" )
 
+        self._logger.info( "Get running containers response code '%d'" % request.response_code)
+
         result = {}
         if request.response_code == 200:
             json = json_lib.parse( request.response_body() )
@@ -324,6 +326,7 @@ class DockerMonitor( ScalyrMonitor ):
                 if not cid == self.container_id:
                     try:
                         containerRequest = DockerRequest( socket_file ).get( "/containers/%s/json" % cid )
+                        self._logger.info( "Get containerRequest response code '%d'" % containerRequest.response_code)
                         if containerRequest.response_code == 200:
                             body = containerRequest.response_body()
                             containerJson = json_lib.parse( body )
