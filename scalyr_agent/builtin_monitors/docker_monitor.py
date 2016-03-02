@@ -300,11 +300,13 @@ class DockerMonitor( ScalyrMonitor ):
             request = DockerRequest( socket_file ).get( "/containers/%s/json" % name )
 
             if request.response_code == 200:
+                self._logger.info( "Get a 200 response code" )
                 json = json_lib.parse( request.response_body() )
                 result = json['Id']
 
             if not result:
-                raise Exception( "Unabled to find a matching container id for container '%s'.  Please make sure that a container named '%s' is running." % (name, name) )
+                self._logger.info( "Got a non-200 response code" )
+                raise Exception( "Unable to find a matching container id for container '%s'.  Please make sure that a container named '%s' is running." % (name, name) )
 
         return result
 
