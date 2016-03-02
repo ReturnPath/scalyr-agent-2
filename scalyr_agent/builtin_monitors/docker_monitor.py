@@ -76,7 +76,7 @@ define_config_option( __monitor__, 'log_timestamps',
 
 class DockerRequest( object ):
 
-    def __init__( self, sock_file, max_request_size=64*1024 ):
+    def __init__( self, sock_file, max_request_size=128*1024 ):
         self.__socket = socket.socket( socket.AF_UNIX, socket.SOCK_STREAM )
         self.__socket.connect( sock_file )
         self.__line_request = LineRequestParser( max_request_size, eof_as_eol=True )
@@ -314,6 +314,8 @@ class DockerMonitor( ScalyrMonitor ):
     def __get_running_containers( self, socket_file ):
         """Gets a dict of running containers that maps container id to container name
         """
+
+        self._logger.info( "Getting running containers" )
         request = DockerRequest( socket_file ).get( "/containers/json" )
 
         self._logger.info( "Get running containers response code '%d'" % request.response_code)
