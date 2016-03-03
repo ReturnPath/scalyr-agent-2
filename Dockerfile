@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
   wget && \
   apt-get clean
 RUN gem install fpm
-RUN echo "hello3"
+RUN echo "hello4"
 RUN cd /usr/bin && mkdir -p /tmp/scalyr && \
   git config --global user.name "Scalyr" && git config --global user.email support@scalyr.com && \
   git clone git://github.com/ReturnPath/scalyr-agent-2.git /tmp/scalyr && \

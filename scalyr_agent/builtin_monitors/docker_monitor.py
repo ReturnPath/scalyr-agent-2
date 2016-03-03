@@ -115,11 +115,9 @@ class DockerRequest( object ):
 
         #first line is response code
         line = self.__request_stream.read_request(0.1)
-        if not line:
-            global_log.info( 'Retrying at first line' )
-            line = self.__request_stream.read_request(1.0)
-            if not line:
-                return
+        while line == None and not self.__request_stream.at_end():
+            global_log.info( 'Trying at first line' )
+            line = self.__request_stream.read_request(0.1)
 
         global_log.info( 'line: %s' % line )
         match = re.match( '^(\S+) (\d+) (.*)$', line.strip() )
