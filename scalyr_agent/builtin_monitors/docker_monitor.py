@@ -116,8 +116,10 @@ class DockerRequest( object ):
         #first line is response code
         line = self.__request_stream.read_request(0.1)
         if not line:
-            global_log.info( 'Bailing at first line' )
-            return
+            global_log.info( 'Retrying at first line' )
+            line = self.__request_stream.read_request(1.0)
+            if not line:
+                return
 
         global_log.info( 'line: %s' % line )
         match = re.match( '^(\S+) (\d+) (.*)$', line.strip() )
@@ -126,7 +128,6 @@ class DockerRequest( object ):
             return
 
         if match.group(1).startswith( 'HTTP' ):
-            global_log.info( 'Bailing at HTTP check' )
             self.response_code = int( match.group(2) )
             self.response_message = match.group(3)
             self.__headers = []
