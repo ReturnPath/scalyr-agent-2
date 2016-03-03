@@ -93,7 +93,7 @@ class DockerRequest( object ):
 
         result = ""
         while not self.__request_stream.at_end():
-            line = self.__request_stream.read_request()
+            line = self.__request_stream.read_request(0.1)
             if line != None:
                 result += line
 
@@ -106,7 +106,7 @@ class DockerRequest( object ):
             self.__read_headers()
             return None
 
-        return self.__request_stream.read_request()
+        return self.__request_stream.read_request(0.1)
 
     def __read_headers( self ):
         """reads HTTP headers from the request stream, leaving the stream at the first line of data"""
@@ -114,7 +114,7 @@ class DockerRequest( object ):
         self.response_message = "Bad request"
 
         #first line is response code
-        line = self.__request_stream.read_request()
+        line = self.__request_stream.read_request(0.1)
         if not line:
             return
 
@@ -127,7 +127,7 @@ class DockerRequest( object ):
             self.response_message = match.group(3)
             self.__headers = []
             while not self.__request_stream.at_end():
-                line = self.__request_stream.read_request()
+                line = self.__request_stream.read_request(0.1)
                 if line == None:
                     break
                 else:
@@ -327,6 +327,7 @@ class DockerMonitor( ScalyrMonitor ):
                 cid = container['Id']
                 if not cid == self.container_id:
                     try:
+                        self._logger.info( "Get /container/%s/json" % cid )
                         containerRequest = DockerRequest( socket_file ).get( "/containers/%s/json" % cid )
                         self._logger.info( "Get containerRequest response code '%d'" % containerRequest.response_code)
                         if containerRequest.response_code == 200:
