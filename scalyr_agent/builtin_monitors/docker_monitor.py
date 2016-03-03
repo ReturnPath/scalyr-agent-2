@@ -116,13 +116,17 @@ class DockerRequest( object ):
         #first line is response code
         line = self.__request_stream.read_request(0.1)
         if not line:
+            print 'Bailing at first line'
             return
 
+        print 'line: %s' % line
         match = re.match( '^(\S+) (\d+) (.*)$', line.strip() )
         if not match:
+            print 'Bailing at re.match'
             return
 
         if match.group(1).startswith( 'HTTP' ):
+            print 'Bailing at HTTP check'
             self.response_code = int( match.group(2) )
             self.response_message = match.group(3)
             self.__headers = []
